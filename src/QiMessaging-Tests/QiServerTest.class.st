@@ -8,6 +8,34 @@ Class {
 }
 
 { #category : #tests }
+QiServerTest >> testConcurentClients [
+	| socket semaphore server |
+	socket := self listenerSocket1.
+	semaphore := Semaphore new.
+	[
+		server := QiServer new socket: socket.
+		server start.
+		20 timesRepeat: [
+			[
+				[
+					| channel message |
+					channel := QiChannel new connect: self listenerAddressUrl1.
+					channel sendMessage: self message1.
+					message := channel receiveMessage.
+					self assert: message type equals: QiMessage typeError.
+					channel close.
+				] ensure: [ 	semaphore signal ]
+			] fork.
+		].
+			
+		20 timesRepeat: [ semaphore wait ].
+		server stop.
+		self assert: socket isConnected equals: false.
+		
+	] ensure: [ socket closeAndDestroy ]
+]
+
+{ #category : #tests }
 QiServerTest >> testConnect [
 	| socket server channel |
 	socket := self listenerSocket1.
@@ -28,21 +56,24 @@ QiServerTest >> testConnect [
 ]
 
 { #category : #tests }
-QiServerTest >> testReceive [
-	| socket server channel message |
+QiServerTest >> testMultipleClients [
+	| socket server |
 	socket := self listenerSocket1.
 	[
 		server := QiServer new socket: socket.
 		server start.
 
-		channel := QiChannel new connect: self listenerAddressUrl1.
-		channel sendMessage: self message1.
-		message := channel receiveMessage.
-		
+		20 timesRepeat: [
+			| channel message |
+			channel := QiChannel new connect: self listenerAddressUrl1.
+			channel sendMessage: self message1.
+			message := channel receiveMessage.
+			self assert: message type equals: QiMessage typeError.
+			channel close.
+		].
 		server stop.
 		
 		self assert: socket isConnected equals: false.
-		self assert: message type equals: QiMessage typeError.
 		
 	] ensure: [ socket closeAndDestroy ]
 ]
@@ -62,6 +93,25 @@ QiServerTest >> testSend [
 		self assert: server isRunning equals: false.
 		"Wait the serve process to pickup the stop request"
 		(Delay forSeconds: 1) wait.
+		self assert: socket isConnected equals: false.
+		
+	] ensure: [ socket closeAndDestroy ]
+]
+
+{ #category : #tests }
+QiServerTest >> testSingleClient [
+	| socket server channel message |
+	socket := self listenerSocket1.
+	[
+		server := QiServer new socket: socket.
+		server start.
+
+		channel := QiChannel new connect: self listenerAddressUrl1.
+		channel sendMessage: self message1.
+		message := channel receiveMessage.
+		self assert: message type equals: QiMessage typeError.
+		channel close.		
+		server stop.
 		self assert: socket isConnected equals: false.
 		
 	] ensure: [ socket closeAndDestroy ]

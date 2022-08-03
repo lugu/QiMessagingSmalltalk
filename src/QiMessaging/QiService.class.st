@@ -5,7 +5,7 @@ I forward incomming messages to the QiObjects I own.
 "
 Class {
 	#name : #QiService,
-	#superclass : #Object,
+	#superclass : #QiReceiver,
 	#instVars : [
 		'objectDictionary'
 	],

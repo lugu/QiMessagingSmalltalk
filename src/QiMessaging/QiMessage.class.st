@@ -28,6 +28,9 @@ Class {
 		'action',
 		'payload'
 	],
+	#classInstVars : [
+		'counter'
+	],
 	#category : #'QiMessaging-Core'
 }
 
@@ -80,6 +83,13 @@ QiMessage class >> magic [
 { #category : #initialize }
 QiMessage class >> maxSize [
 	^ 1024 * 1024 * 50
+]
+
+{ #category : #'instance creation' }
+QiMessage class >> newUniqueId [
+	counter ifNil: [ counter := 0 ].
+	counter := counter + 1.
+	^ self new id: counter
 ]
 
 { #category : #'instance creation' }
@@ -145,6 +155,11 @@ QiMessage class >> typeUnknown [
 	^ 0
 ]
 
+{ #category : #comparing }
+QiMessage >> = anotherMessage [
+	^ self equals: anotherMessage
+]
+
 { #category : #accessing }
 QiMessage >> action [
 	^action
@@ -172,7 +187,7 @@ QiMessage >> data [
 	^bytes
 ]
 
-{ #category : #accessing }
+{ #category : #comparing }
 QiMessage >> equals: anotherMessage [
 	| fields |
 	fields := #( #id #flags #type #size #service #object #action #payload).
@@ -207,6 +222,17 @@ QiMessage >> id [
 { #category : #accessing }
 QiMessage >> id: anId [
 	id := anId.
+]
+
+{ #category : #initialization }
+QiMessage >> initialize [ 
+	id := 0.	
+	flags := 0.
+	type := 0.
+	service := 0.
+	action := 0.
+	object := 0.
+	payload := ByteArray new.
 ]
 
 { #category : #accessing }
@@ -257,7 +283,6 @@ QiMessage >> size [
 
 { #category : #accessing }
 QiMessage >> size: aNumber [
-	payload ifNotNil: [ Error new signal: 'cannot size size if payload already set.' ].
 	size := aNumber
 ]
 

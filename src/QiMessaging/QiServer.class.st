@@ -21,7 +21,13 @@ QiServer >> handleConnection: aSocket [
 	chan := QiChannel fromSocket: aSocket withUrl: 'client connection'.
 	[
 		[ self isRunning ] whileTrue: 
-			[ self receive: chan receiveMessage from: chan ]. 		
+			[
+				[ self receive: chan receiveMessage from: chan ]
+				on: Error do: [ :anError |
+					chan close.
+					anError trace.
+					^anError. ]
+			]
 	] ensure: [ aSocket closeAndDestroy ]
 ]
 
