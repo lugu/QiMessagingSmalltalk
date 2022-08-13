@@ -5,19 +5,19 @@ You can inherited me and add your slots. I will make them available via the args
 Don't forget to name the subclass by overloading the name method.
 "
 Class {
-	#name : #QiSlots,
+	#name : #QiStruct,
 	#superclass : #Object,
 	#category : #'QiMessaging-Core'
 }
 
 { #category : #accessing }
-QiSlots >> args [
+QiStruct >> args [
 	"Returns an array with the instance variables."
 	^ self class instanceVariables collect: [ :slot | slot read: self ]
 
 ]
 
 { #category : #accessing }
-QiSlots >> name [
+QiStruct >> name [
 	^ SubclassResponsibility new signal
 ]

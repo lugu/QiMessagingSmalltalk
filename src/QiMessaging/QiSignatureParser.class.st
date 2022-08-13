@@ -43,13 +43,14 @@ QiSignatureParser class >> flushCache [
 QiSignatureParser class >> parseSignature: aString [
 
 	"Return the serializer of the signature."
-
+	^ self new parse: aString.
+	
 	"If not found in the cache, create the seralizer"
-
+	"
 	aQiSignatureParser ifNil: [	aQiSignatureParser := self new ].
 	cacheDictionary ifNil: [ cacheDictionary := Dictionary new ].
 	^ cacheDictionary at: aString ifAbsentPut: [ aQiSignatureParser parse: aString].
-
+	"
 ]
 
 { #category : #parsers }
@@ -127,15 +128,15 @@ QiSignatureParser >> string [
 { #category : #parsers }
 QiSignatureParser >> struct [
 	^ ('(' asParser, signature star, ')' asParser, '<' asParser, names, '>' asParser) ==> [ :nodes |
-		| parsers symbols objectName serializerDictionary |
+		| parsers symbols structName serializerDictionary |
 		parsers := nodes at: 2.
 		symbols := nodes at: 5.
-		objectName := symbols first.
+		structName := symbols first.
 		serializerDictionary := OrderedDictionary new.
 		symbols allButFirst with: parsers do: [ :aSymbol :aParser |
 			serializerDictionary at: aSymbol put: aParser.
 		].
-		QiStructSerializer new serializerDictionary: serializerDictionary withStructName: objectName]
+		QiStructSerializer new serializerDictionary: serializerDictionary withStructName: structName]
 ]
 
 { #category : #parsers }

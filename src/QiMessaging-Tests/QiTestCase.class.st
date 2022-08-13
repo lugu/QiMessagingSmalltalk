@@ -10,13 +10,13 @@ Class {
 
 { #category : #accessing }
 QiTestCase >> chan1 [
-
+	chan1 ifNil: [ self setUpChans ].
 	^ chan1
 ]
 
 { #category : #accessing }
 QiTestCase >> chan2 [
-
+	chan2 ifNil: [ self setUpChans ].
 	^ chan2
 ]
 
@@ -93,7 +93,7 @@ QiTestCase >> message2 [
 ]
 
 { #category : #running }
-QiTestCase >> setUp [
+QiTestCase >> setUpChans [
 	"Create a pair of channels"
 	| serverSocket  sessionSocket |
 	super setUp.
@@ -109,7 +109,7 @@ QiTestCase >> setUp [
 
 { #category : #running }
 QiTestCase >> tearDown [
-	chan1 close.
-	chan2 close.
+	chan1 ifNotNil: [ chan1 close. chan1 := nil ].
+	chan2 ifNotNil: [ chan2 close. chan1 := nil ].
 	super tearDown
 ]

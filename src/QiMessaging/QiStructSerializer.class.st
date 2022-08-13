@@ -10,35 +10,31 @@ Class {
 	#superclass : #QiSerializer,
 	#instVars : [
 		'orderedDictionaryOfSerializer',
-		'name'
+		'classSymbol'
 	],
 	#category : #'QiMessaging-Core'
 }
 
 { #category : #serialization }
 QiStructSerializer >> createQiStructClass [
-	| class |
-	class := QiSlots newAnonymousSubclass.
-	class compile: 'structName', String cr, '^', name surroundedBySingleQuotes.
-	^ class
-]
 
-{ #category : #serialization }
-QiStructSerializer >> createQiStructClassWithSymbols: anArray [
-	| class |
-	class := self createQiStructClass.
-	anArray do: [ :symbol |
-		class := class addSlot: symbol => InstanceVariableSlot.
-		class compile: symbol asString, String cr, '^', symbol asString.
-		class compile: symbol asString, ': value', String cr, symbol asString, ':= value'.
-	 ].	
+	| class instVarNameList |
+	instVarNameList := ' ' join: orderedDictionaryOfSerializer keys.
+	class := QiStruct
+		         subclass: classSymbol
+		         instanceVariableNames: instVarNameList
+		         classVariableNames: #(  )
+		         package: 'QiMessaging-Generated' asSymbol.
+	orderedDictionaryOfSerializer keysDo: [ :each | 
+		class compile: each , String cr , '^' , each.
+		class compile: each , ': value' , String cr , each , ':= value' ].
 	^ class
 ]
 
 { #category : #serialization }
 QiStructSerializer >> deserializeFrom: aReadStream [
 	| class object |
-	class := self createQiStructClassWithSymbols: orderedDictionaryOfSerializer keys.
+	class :=  Smalltalk at: classSymbol ifAbsent: [ self createQiStructClass ].
 	object := class new.	
 	orderedDictionaryOfSerializer keysAndValuesDo: [ :aSymbol :serializer |
 		| value |
@@ -61,5 +57,5 @@ QiStructSerializer >> serialize: anObject into: aWriteStream [
 { #category : #serialization }
 QiStructSerializer >> serializerDictionary: anOrderedDictionaryOfSerializer withStructName: aString [
 	orderedDictionaryOfSerializer := anOrderedDictionaryOfSerializer.
-	name := aString
+	classSymbol := ('Qim', aString) asSymbol.
 ]
