@@ -72,6 +72,27 @@ QiMetaObject class >> statsSignature [
 ]
 
 { #category : #accessing }
+QiMetaObject >> createProxyClassNamed: aString [
+
+	| classSymbolName |
+	classSymbolName := 'QimProxy' , aString.
+	^ Smalltalk at: classSymbolName asSymbol ifAbsent: [ 
+		  | class |
+		  class := QiProxyObject
+			           subclass: classSymbolName
+			           instanceVariableNames: ''
+			           classVariableNames: #(  )
+			           package: 'QiMessaging-Generated' asSymbol.
+		  methods keysAndValuesDo: [ :id :aMetaMethod | 
+			  | methodName |
+			  methodName := aMetaMethod name.
+			  class compile:
+				  methodName , ': value' , String cr , '^ super callMethodId: '
+				  , id , ' 	withArgument: value' ].
+		  class ]
+]
+
+{ #category : #accessing }
 QiMetaObject >> description [
 
 	^ description

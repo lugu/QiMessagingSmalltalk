@@ -67,7 +67,8 @@ QiSession >> authenticate: aQiChannel [
 			                 ('auth_user' -> (QiValue newString: user)).
 			                 ('auth_token' -> (QiValue newString: token)) }.
 
-	proxy := QiProxyObject new: aQiChannel
+	proxy := QiProxyObject newWithName: 'AuthenticationService'
+					channel: aQiChannel
 		         serviceId: 0
 		         objectId: 0
 		         metaObject: QiMetaObject authenticationService.
@@ -123,11 +124,11 @@ QiSession >> directory [
 { #category : #initialization }
 QiSession >> directory: aQiChannel [
 	"Returns a proxy object representing the Service Director"
-	directory  := QiProxyObject new: aQiChannel
+	directory  := QiProxyObject newBasicObject: aQiChannel
 		         serviceId: 1
-		         objectId: 1
-		         metaObject: QiMetaObject basicObject.
-	^ directory reify.
+		         objectId: 1.
+	directory := directory reifyInto: 'ServiceDirectory'.
+	^ directory
 ]
 
 { #category : #initialization }
@@ -158,12 +159,11 @@ QiSession >> service: aString [
 	| info chan service |
 	info := directory service: aString.
 	chan := self channelFromServiceInfo: info.
-	service := QiProxyObject new: chan
+	service := QiProxyObject newBasicObject: chan
 		         serviceId: info serviceId
-		         objectId: 1
-		         metaObject: QiMetaObject basicObject.
-	^ service reify
-
+		         objectId: 1.
+	service := service reifyInto: aString.
+	^ service
 ]
 
 { #category : #accessing }

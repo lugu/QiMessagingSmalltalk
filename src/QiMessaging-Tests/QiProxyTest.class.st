@@ -19,7 +19,8 @@ QiProxyTest >> demoProxyCallServer [
 	channel := QiChannel connect: url.
 	channel startPolling.
 	[
-	proxy := QiProxyObject new: channel
+	proxy := QiProxyObject newWithName: 'AuthenticationService'
+					channel: channel
 		         serviceId: 0
 		         objectId: 0
 		         metaObject: QiMetaObject authenticationService.
