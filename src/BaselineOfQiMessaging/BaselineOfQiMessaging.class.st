@@ -16,13 +16,9 @@ BaselineOfQiMessaging >> baseline: spec [
 				"Packages"
 				spec
 					package: 'QiMessaging';
-					package: 'QiMessaging-Tests' with: [ spec requires: #('QiMessaging') ]
-	]
+					package: 'QiMessaging-Tests' with: [ spec requires: #('QiMessaging');
+					package: 'QiMessaging-Generated' with: [ spec requires: #('QiMessaging') ] ]
 ]
-
-{ #category : #baselines }
-BaselineOfQiMessaging >> projectClass [
-        ^ MetacelloCypressBaselineProject
 ]
 
 { #category : #baselines }
@@ -30,4 +26,9 @@ BaselineOfQiMessaging >> petitParser: spec [
 	spec
 		baseline: 'PetitParser'
 		with: [ spec repository: 'github://moosetechnology/PetitParser:v2.2.0/src' ].
+]
+
+{ #category : #baselines }
+BaselineOfQiMessaging >> projectClass [
+        ^ MetacelloCypressBaselineProject
 ]
