@@ -87,8 +87,8 @@ QiMetaObject >> createProxyClassNamed: aString [
 			  | methodName |
 			  methodName := aMetaMethod name.
 			  class compile:
-				  methodName , ': value' , String cr , '^ super callMethodId: '
-				  , id asString, ' 	withArguments: value' ].
+				  methodName , ': args' , String cr , '^ super callMethodId: '
+				  , id asString, ' 	withArguments: { args }' ].
 		  class ]
 ]
 

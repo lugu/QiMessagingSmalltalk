@@ -52,8 +52,7 @@ QiSessionTest >> testMultipleConnect [
 QiSessionTest >> testNew [
 	"Connect using an URL like tcp://127.0.0.1:123"
 
-| socket session |
-socket := self listenerSocket1.
-session := QiSession create: self listenerAddressUrl1.
+| session |
+session := QiSession new join: self listenerAddressUrl1.
 self assert: session isConnected.
 ]

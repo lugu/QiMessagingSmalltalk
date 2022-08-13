@@ -138,9 +138,8 @@ QiChannel >> removeAllReceivers: anError [
 
 	"Remove all receivers by sending them the stop message."
 
-	[ receivers isNotEmpty ] whileTrue: [ 
-		receivers first stop: anError.
-		receivers remove: receivers first ]
+	receivers do: [ :each | each close: anError ].
+	receivers removeAll.
 ]
 
 { #category : #accessing }

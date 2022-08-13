@@ -85,13 +85,12 @@ QiSructSerializerTest >> testSructSerialization [
 { #category : #tests }
 QiSructSerializerTest >> testStructNameAndArgs [
 
-	| anotherObject slots |
+	| b a |
 		
-	slots := self inputValues.
-	anotherObject := self outputObject.
+	a := self inputValues.
+	b := self outputObject.
 
-	self assert: anotherObject structName equals: 'Test'.
-	anotherObject args
-		with: slots values
+	b args
+		with: a values
 		do: [ :received :expected | self assert: received equals: expected ].
 ]
