@@ -31,3 +31,8 @@ QiTupleSerializer >> serialize: aSequenceableCollection into: aWriteStream [
 QiTupleSerializer >> serializers: aSequenceableCollection [
 	sequenceOfSerializer := aSequenceableCollection
 ]
+
+{ #category : #serialization }
+QiTupleSerializer >> size [
+	^ sequenceOfSerializer size
+]

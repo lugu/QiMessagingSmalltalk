@@ -80,6 +80,21 @@ QiBasicSerializerTest >> testInteger [
 ]
 
 { #category : #tests }
+QiBasicSerializerTest >> testLongLong [
+	| serializer |
+	serializer := QiBasicSerializer newLongLong.
+	#(6 0 1 2 3 -2 99 ) do: [ :aNumber |
+		| buffer anotherNumber |
+		buffer := ReadWriteStream on: ByteArray new.
+		serializer serialize: aNumber into: buffer.
+		buffer reset.
+		anotherNumber := serializer deserializeFrom: buffer.
+		self assert: anotherNumber equals: aNumber
+	]
+		
+]
+
+{ #category : #tests }
 QiBasicSerializerTest >> testString [
 	| serializer |
 	serializer := QiBasicSerializer newString.
@@ -99,6 +114,21 @@ QiBasicSerializerTest >> testUnsignedInteger [
 	| serializer |
 	serializer := QiBasicSerializer newUnsignedInteger.
 	#(6 0 1 2 3 99 ) do: [ :aNumber |
+		| buffer anotherNumber |
+		buffer := ReadWriteStream on: ByteArray new.
+		serializer serialize: aNumber into: buffer.
+		buffer reset.
+		anotherNumber := serializer deserializeFrom: buffer.
+		self assert: anotherNumber equals: aNumber
+	]
+		
+]
+
+{ #category : #tests }
+QiBasicSerializerTest >> testUnsignedLongLong [
+	| serializer |
+	serializer := QiBasicSerializer newUnsignedLongLong.
+	#(6 0 1 2 3 2 99 ) do: [ :aNumber |
 		| buffer anotherNumber |
 		buffer := ReadWriteStream on: ByteArray new.
 		serializer serialize: aNumber into: buffer.

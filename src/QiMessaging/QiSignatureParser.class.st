@@ -12,9 +12,11 @@ Class {
 		'bytearray',
 		'boolean',
 		'integer',
+		'unsignedInteger',
+		'longLong',
+		'unsignedLongLong',
 		'signature',
 		'string',
-		'unsignedInteger',
 		'array',
 		'tuple',
 		'dictionary',
@@ -94,6 +96,11 @@ QiSignatureParser >> integer [
 ]
 
 { #category : #parsers }
+QiSignatureParser >> longLong [
+	^ 'l' asParser token ==> [ :aToken | QiBasicSerializer newLongLong ]
+]
+
+{ #category : #parsers }
 QiSignatureParser >> names [
 	^ (symbol separatedBy: ',' asParser) withoutSeparators / symbol star
 ]
@@ -106,6 +113,8 @@ QiSignatureParser >> signature [
 		float /
 		double /
 		boolean /
+		longLong /
+		unsignedLongLong /
 		string /
 		bytearray /
 		array /
@@ -153,6 +162,11 @@ QiSignatureParser >> tuple [
 { #category : #parsers }
 QiSignatureParser >> unsignedInteger [
 	^ 'I' asParser token ==> [ :aToken | QiBasicSerializer newUnsignedInteger ]
+]
+
+{ #category : #parsers }
+QiSignatureParser >> unsignedLongLong [
+	^ 'L' asParser token ==> [ :aToken | QiBasicSerializer newUnsignedLongLong ]
 ]
 
 { #category : #parsers }

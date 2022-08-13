@@ -68,7 +68,7 @@ QiSignatureParserTest >> testParseSructSignatures [
 
 { #category : #tests }
 QiSignatureParserTest >> testParseTupleSignatures [
-	#( 	'()' '(I)' '(sb)' '(si(b(r)r)I)') do: [ :validSignature |
+	#( 	'()' '(I)' '(sb)' '(si(b(r)r)I)' '(IIL)') do: [ :validSignature |
 			| serializer |
 			serializer := QiSignatureParser new parse: validSignature.
 			self assert: (serializer isKindOf: QiTupleSerializer). 

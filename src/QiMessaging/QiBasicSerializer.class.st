@@ -56,6 +56,13 @@ QiBasicSerializer class >> newInteger [
 ]
 
 { #category : #'instance creation' }
+QiBasicSerializer class >> newLongLong [
+	^ self new
+		initializeWithSerializer: #serializeLongLong:into:
+		withDeserializer: #deserializeLongLongFrom:
+]
+
+{ #category : #'instance creation' }
 QiBasicSerializer class >> newString [
 	^ self new
 		initializeWithSerializer: #serializeString:into:
@@ -67,6 +74,13 @@ QiBasicSerializer class >> newUnsignedInteger [
 	^ self new
 		initializeWithSerializer: #serializeUnsignedInteger:into:
 		withDeserializer: #deserializeUnsignedIntegerFrom:
+]
+
+{ #category : #'instance creation' }
+QiBasicSerializer class >> newUnsignedLongLong [
+	^ self new
+		initializeWithSerializer: #serializeUnsignedLongLong:into:
+		withDeserializer: #deserializeUnsignedLongLongFrom:
 ]
 
 { #category : #serialization }
@@ -104,6 +118,11 @@ QiBasicSerializer >> deserializeIntegerFrom: aReadStream [
 ]
 
 { #category : #serialization }
+QiBasicSerializer >> deserializeLongLongFrom: aReadStream [
+	^ self class readLongLongFrom: aReadStream
+]
+
+{ #category : #serialization }
 QiBasicSerializer >> deserializeStringFrom: aReadStream [
 	^ (self deserializeByteArrayFrom: aReadStream) asString
 ]
@@ -111,6 +130,11 @@ QiBasicSerializer >> deserializeStringFrom: aReadStream [
 { #category : #serialization }
 QiBasicSerializer >> deserializeUnsignedIntegerFrom: aReadStream [
 	^ self class readUnsignedIntegerFrom: aReadStream
+]
+
+{ #category : #serialization }
+QiBasicSerializer >> deserializeUnsignedLongLongFrom: aReadStream [
+	^ self class readUnsignedLongLongFrom: aReadStream
 ]
 
 { #category : #serialization }
@@ -151,6 +175,11 @@ QiBasicSerializer >> serializeInteger: aNumber into: aWriteStream [
 ]
 
 { #category : #serialization }
+QiBasicSerializer >> serializeLongLong: aNumber into: aWriteStream [
+	self class writeLongLong: aNumber into: aWriteStream
+]
+
+{ #category : #serialization }
 QiBasicSerializer >> serializeString: aString into: aWriteStream [
 	self serializeByteArray: aString asByteArray into: aWriteStream.
 
@@ -159,4 +188,9 @@ QiBasicSerializer >> serializeString: aString into: aWriteStream [
 { #category : #serialization }
 QiBasicSerializer >> serializeUnsignedInteger: aNumber into: aWriteStream [
 	self class writeUnsignedInteger: aNumber into: aWriteStream
+]
+
+{ #category : #serialization }
+QiBasicSerializer >> serializeUnsignedLongLong: aNumber into: aWriteStream [
+	self class writeUnsignedLongLong: aNumber into: aWriteStream
 ]

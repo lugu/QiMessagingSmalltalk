@@ -43,11 +43,27 @@ QiSerializer class >> readIntegerFrom: aReadStream [
 ]
 
 { #category : #internal }
+QiSerializer class >> readLongLongFrom: aReadStream [
+	| buffer |
+	buffer := ByteArray new: 8.
+	aReadStream readInto: buffer startingAt: 1 count: 8.
+	^ buffer signedLongLongAt: 1.
+]
+
+{ #category : #internal }
 QiSerializer class >> readUnsignedIntegerFrom: aReadStream [
 	| buffer |
 	buffer := ByteArray new: 4.
 	aReadStream readInto: buffer startingAt: 1 count: 4.
 	^ buffer unsignedLongAt: 1 bigEndian: false.
+]
+
+{ #category : #internal }
+QiSerializer class >> readUnsignedLongLongFrom: aReadStream [
+	| buffer |
+	buffer := ByteArray new: 8.
+	aReadStream readInto: buffer startingAt: 1 count: 8.
+	^ buffer unsignedLongLongAt: 1.
 ]
 
 { #category : #internal }
@@ -83,10 +99,28 @@ QiSerializer class >> writeInteger: anInteger into: aWriteStream [
 ]
 
 { #category : #internal }
+QiSerializer class >> writeLongLong: anInteger into: aWriteStream [
+	| data |
+	data := ByteArray new: 8.
+	data signedLongLongAt: 1 put: anInteger.
+	aWriteStream nextPutAll: data.
+	
+]
+
+{ #category : #internal }
 QiSerializer class >> writeUnsignedInteger: anInteger into: aWriteStream [
 	| data |
 	data := ByteArray new: 4.
 	data unsignedLongAt: 1 put: anInteger bigEndian: false.
+	aWriteStream nextPutAll: data.
+	
+]
+
+{ #category : #internal }
+QiSerializer class >> writeUnsignedLongLong: anInteger into: aWriteStream [
+	| data |
+	data := ByteArray new: 8.
+	data unsignedLongLongAt: 1 put: anInteger.
 	aWriteStream nextPutAll: data.
 	
 ]

@@ -27,6 +27,39 @@ QiMetaMethod class >> uid: aNumber name: aStringName parameters: aStringSignatur
 ]
 
 { #category : #accessing }
+QiMetaMethod >> createMethodFor: aClass [
+	"Create the method selector representing the MetaMethod."
+	"If given, the name of the arguments is generated."
+	parametersSignature = '()'
+		ifTrue: [
+			aClass compile:
+				name, String cr , '^ super callMethodId: ' , uid asString
+				, ' 	withArguments: { }' ]
+		ifFalse: [ 
+			| parser |
+			parser := QiSignatureParser parseSignature: parametersSignature.
+			"The parser should be a QiTupleParser because parameters are tuple."
+			self createMethodFor: aClass withSize: parser size ]
+]
+
+{ #category : #accessing }
+QiMetaMethod >> createMethodFor: aClass withSize: aNumber [
+	|  source withs list params |
+	params := (aNumber = parameters size) ifTrue: [
+		parameters collect: [ :each | each name ].
+	] ifFalse: [
+		(1 to: aNumber) collect: [ :each | 'param', each asString ]
+	].
+	withs := ' with: ' join: params.
+	list := ' . ' join: params.
+	source := name , ': ', withs, String cr
+		, '^ super callMethodId: ' , uid asString
+		, ' 	withArguments: { ', list, ' }'.
+	aClass compile: source
+
+]
+
+{ #category : #accessing }
 QiMetaMethod >> description [
 
 	^ description

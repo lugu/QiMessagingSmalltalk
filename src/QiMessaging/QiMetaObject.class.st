@@ -77,19 +77,15 @@ QiMetaObject >> createProxyClassNamed: aString [
 	| classSymbolName |
 	classSymbolName := 'QimProxy' , aString.
 	^ Smalltalk at: classSymbolName asSymbol ifAbsent: [ 
-		  | class |
-		  class := QiProxyObject
+		| class |
+		class := QiProxyObject
 			           subclass: classSymbolName
 			           instanceVariableNames: ''
-			           classVariableNames: #(  )
+			           classVariableNames: #()
 			           package: 'QiMessaging-Generated' asSymbol.
-		  methods keysAndValuesDo: [ :id :aMetaMethod | 
-			  | methodName |
-			  methodName := aMetaMethod name.
-			  class compile:
-				  methodName , ': args' , String cr , '^ super callMethodId: '
-				  , id asString, ' 	withArguments: { args }' ].
-		  class ]
+		  methods do: [ :each | each createMethodFor: class ].
+			class.
+		]
 ]
 
 { #category : #accessing }
