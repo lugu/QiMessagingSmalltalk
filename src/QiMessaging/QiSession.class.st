@@ -80,13 +80,16 @@ QiSession >> authenticate: aQiChannel [
 
 { #category : #accessing }
 QiSession >> channelFromServiceInfo: info [
+
 	"Return a QiProxyObject representing the remote service aString."
-	| isDifferentMachine |
-	isDifferentMachine := info machineId = self machineId.
-	^ info endpoints detect: [ :url |
-			(isDifferentMachine and: [ url contains: '127.0.0.1']) ifTrue: [ false ]
-			ifFalse: 	[[ self connect: url. true ] onErrorDo: [ false ]]
-	].
+	| skipLocalAddress |
+	"Do not attempt to connect locally if the machine id is different."
+	skipLocalAddress := info machineId ~= self class machineId.
+	info endpoints do: [ :url |
+		((url beginsWith: 'tcp://127.0.0.1') xor: skipLocalAddress) ifTrue: [
+			[^ self connect: url] onErrorDo: [ "nothing surprising" ]
+			 ] ].
+	^ Error new signal: 'Failed to connect to ' , info endpoints asString
 ]
 
 { #category : #'initialize - destroy' }
@@ -103,7 +106,7 @@ QiSession >> connect: aString [
 	"aString should be formatted like: tcp://<host>:<port>"
 	| channel |
 	^ channels at: aString ifAbsent: [
-		channel := QiChannel new connect: aString.
+		channel := QiChannel connect: aString.
 		channel startPolling.
 		self authenticate: channel.
 		channels at: aString put: channel.
