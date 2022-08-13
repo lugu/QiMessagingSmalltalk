@@ -4,9 +4,6 @@ I am the abstract interface to which QiMessage are sent.
 Class {
 	#name : #QiReceiver,
 	#superclass : #Object,
-	#instVars : [
-		'block'
-	],
 	#category : #'QiMessaging-Core'
 }
 

@@ -14,7 +14,7 @@ Class {
 		'objectId',
 		'metaObject'
 	],
-	#category : #QiMessaging
+	#category : #'QiMessaging-Core'
 }
 
 { #category : #'instance creation' }

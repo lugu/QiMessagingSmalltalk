@@ -9,7 +9,7 @@ Class {
 
 { #category : #'code-critics' }
 ManifestQiMessagingTests class >> ruleSentNotImplementedRuleV1FalsePositive [
-	^ #(#(#(#RGClassDefinition #(#QiProxyTest)) #'2022-08-12T00:31:43.37548+02:00') )
+	^ #(#(#(#RGClassDefinition #(#QiProxyObjectTest)) #'2022-08-12T00:31:43.37548+02:00') )
 ]
 
 { #category : #'code-critics' }

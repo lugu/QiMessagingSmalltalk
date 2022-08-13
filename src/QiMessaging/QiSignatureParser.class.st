@@ -30,7 +30,7 @@ Class {
 		'aQiSignatureParser',
 		'cacheDictionary'
 	],
-	#category : #QiMessaging
+	#category : #'QiMessaging-Core'
 }
 
 { #category : #parsing }

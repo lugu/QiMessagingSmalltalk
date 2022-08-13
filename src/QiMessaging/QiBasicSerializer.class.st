@@ -17,7 +17,7 @@ Class {
 		'deserializeSymbol',
 		'serializeSymbol'
 	],
-	#category : #QiMessaging
+	#category : #'QiMessaging-Core'
 }
 
 { #category : #'instance creation' }

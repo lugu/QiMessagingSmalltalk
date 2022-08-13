@@ -13,6 +13,11 @@ ManifestQiMessaging class >> ruleBadMessageRule2V1FalsePositive [
 ]
 
 { #category : #'code-critics' }
+ManifestQiMessaging class >> ruleExcessiveVariablesRuleV1FalsePositive [
+	^ #(#(#(#RGClassDefinition #(#QiSignatureParser)) #'2022-08-13T21:47:09.361837+02:00') )
+]
+
+{ #category : #'code-critics' }
 ManifestQiMessaging class >> ruleSentNotImplementedRuleV1FalsePositive [
 	^ #(#(#(#RGMethodDefinition #(#QiSession #service: #false)) #'2022-08-12T23:19:34.675503+02:00') )
 ]
