@@ -36,10 +36,12 @@ QiMetaMethod >> createMethodFor: aClass [
 				name, String cr , '^ super callMethodId: ' , uid asString
 				, ' 	withArguments: { }' ]
 		ifFalse: [ 
-			| parser |
-			parser := QiSignatureParser parseSignature: parametersSignature.
+			| aSerializer numberOfArguments |
+			aSerializer := QiSignatureParser parseSignature: parametersSignature.
 			"The parser should be a QiTupleParser because parameters are tuple."
-			self createMethodFor: aClass withSize: parser size ]
+			"If it is something else, it is a single parameter."
+			numberOfArguments := (aSerializer isKindOf: QiTupleSerializer) ifTrue: [ aSerializer size ] ifFalse: [ 1 ]. 
+			self createMethodFor: aClass withSize: numberOfArguments ]
 ]
 
 { #category : #accessing }

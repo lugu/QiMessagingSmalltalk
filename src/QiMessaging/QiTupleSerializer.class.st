@@ -16,9 +16,9 @@ QiTupleSerializer >> deserializeFrom: aReadStream [
 		serializer deserializeFrom: aReadStream ]
 ]
 
-{ #category : #serialization }
+{ #category : #initialization }
 QiTupleSerializer >> initialize [
-	sequenceOfSerializer := SequenceableCollection new.
+	sequenceOfSerializer := Array new.
 ]
 
 { #category : #serialization }

@@ -22,7 +22,7 @@ QiMetaObject class >> authenticationService [
 		signals: Dictionary new;
 		properties: Dictionary new;
 		methods: (Dictionary newFrom: {
-			0 -> (QiMetaMethod new
+			8 -> (QiMetaMethod new
 				uid: 8;
 				returnSignature: '{sm}';
 				name: 'authenticate';
