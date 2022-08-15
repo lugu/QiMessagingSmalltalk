@@ -83,8 +83,15 @@ QiMetaObject >> createProxyClassNamed: aString [
 			           instanceVariableNames: ''
 			           classVariableNames: #()
 			           package: 'QiMessaging-Generated' asSymbol.
-		  methods do: [ :each | each createMethodFor: class ].
-			class.
+		signals do: [ :each | each createSignalFor: class ].
+		properties do: [ :each | each createPropertyFor: class ]. 
+		methods do: [ :each | 
+			"Do not generate methods for registerEvent and unregisterEvent"
+			"They have action id 0 and 1."
+			"Instead, special selectors are generated for each signal."
+			(each uid > 1) ifTrue: [ each createMethodFor: class ]
+			].
+		class.
 		]
 ]
 
@@ -101,10 +108,18 @@ QiMetaObject >> description: anObject [
 ]
 
 { #category : #accessing }
-QiMetaObject >> findMethod: aString orElse: aBlock [
+QiMetaObject >> findMetaMethod: aString orElse: aBlock [
 	"I return the QiMetaMethod i find."
 	^self methods detect: [ :metaMethod |
 		metaMethod name = aString
+	] ifNone: aBlock
+]
+
+{ #category : #accessing }
+QiMetaObject >> findMetaSignal: aString orElse: aBlock [
+	"I return the QiMetaSignal i find."
+	^self signals detect: [ :metaSignal |
+		metaSignal name = aString
 	] ifNone: aBlock
 ]
 

@@ -144,9 +144,12 @@ QiChannel >> removeAllReceivers: anError [
 
 { #category : #accessing }
 QiChannel >> removeReceiver: aQiReceiver [
-	receiversLock critical: [ 
+	"The receiver will no more receive messages."
+	"Message close: is sent with QiErrorStop"
+	receiversLock critical: [
 		receivers remove: aQiReceiver ifAbsent: [].
-	]
+	].
+	aQiReceiver stop: (QiErrorStop newString: 'receiver removed.').
 ]
 
 { #category : #accessing }

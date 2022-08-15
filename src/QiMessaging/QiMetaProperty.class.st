@@ -15,6 +15,12 @@ Class {
 }
 
 { #category : #accessing }
+QiMetaProperty >> createPropertyFor: aClass [
+	"Not yet implemented."
+	^ self.
+]
+
+{ #category : #accessing }
 QiMetaProperty >> initialize [
 	name := ''.
 	signature := ''.

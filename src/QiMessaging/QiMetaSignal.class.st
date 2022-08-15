@@ -15,6 +15,14 @@ Class {
 }
 
 { #category : #initialization }
+QiMetaSignal >> createSignalFor: aClass [
+	aClass compile: 'on', name capitalized, 'Do: aBlockWithOneArgument', String cr,
+		'"Invoke the block with the new value each time the signal is raise"', String cr,
+		'"Return a QiReceiver shall be used to unregister to the signal."', String cr,
+		'^ self registerToSignal: ', name surroundedBySingleQuotes, ' with: aBlockWithOneArgument'.
+]
+
+{ #category : #initialization }
 QiMetaSignal >> initialize [
 	name := ''.
 	signature := ''.
