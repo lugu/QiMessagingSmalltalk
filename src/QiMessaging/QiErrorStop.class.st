@@ -8,3 +8,13 @@ Class {
 	#superclass : #QiError,
 	#category : #'QiMessaging-Core'
 }
+
+{ #category : #'class initialization' }
+QiErrorStop class >> initialize [
+	self value: 'QiErrorStop: normal interruption' signature: 's'
+]
+
+{ #category : #initialization }
+QiErrorStop >> initialize [ 
+	self value: 'QiErrorStop: normal interruption' signature: 's'
+]

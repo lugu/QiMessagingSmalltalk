@@ -150,7 +150,8 @@ QiSignatureParser >> struct [
 
 { #category : #parsers }
 QiSignatureParser >> symbol [
-	^ #word asParser plus token ==> [ :node | node inputValue asSymbol]
+	^ (#letter asParser, (( #word asParser / $_ asParser) star)) flatten token ==> [ :node | node inputValue asSymbol]
+	"^ #word asParser plus token ==> [ :node | node inputValue asSymbol]"
 ]
 
 { #category : #parsers }

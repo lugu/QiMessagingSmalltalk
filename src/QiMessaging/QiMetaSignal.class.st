@@ -22,6 +22,14 @@ QiMetaSignal >> createSignalFor: aClass [
 		'^ self registerToSignal: ', name surroundedBySingleQuotes, ' with: aBlockWithOneArgument'.
 ]
 
+{ #category : #accessing }
+QiMetaSignal >> deserializeResponse: anArray [
+	"Deserialize the value returned by the method. Does not attempt to handle errors."
+	| serializer |
+	serializer := QiSignatureParser parseSignature: self signature.
+	^ serializer deserializeFrom: (ReadStream on: anArray).
+]
+
 { #category : #initialization }
 QiMetaSignal >> initialize [
 	name := ''.

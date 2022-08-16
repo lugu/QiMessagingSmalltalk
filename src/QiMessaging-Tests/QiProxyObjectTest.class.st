@@ -32,6 +32,19 @@ QiProxyObjectTest >> demoProxyCallServer [
 ]
 
 { #category : #tests }
+QiProxyObjectTest >> demoSignalSubscription [
+
+	"Integration test: connect to a remote server and listen to a signal"
+	| session cancelable |
+	session := QiSession new join: 'tcp://localhost:9559'.
+	session directory enableTrace: true.
+	cancelable := session directory onTraceObjectDo: [ :each | 'Yeah' traceCr ].
+	10 timesRepeat: [ session directory services ].
+	cancelable cancel.
+	cancelable inspect.
+]
+
+{ #category : #tests }
 QiProxyObjectTest >> testAuthenticationServiceClassCreation [
 	| object | 
 	Smalltalk
@@ -71,4 +84,16 @@ QiProxyObjectTest >> testBasicObjectCreation [
 		          newBasicObject: chan1
 		          serviceId: 0
 		          objectId: 0
+]
+
+{ #category : #tests }
+QiProxyObjectTest >> testSignalSubscription [
+
+	"Integration test: connect to a remote server and listen to a signal"
+	| session cancelable |
+	session := QiSession new join: 'tcp://localhost:9559'.
+	session directory enableTrace: true.
+	cancelable := session directory onTraceObjectDo: [ :each | each traceCr. ].
+	10 timesRepeat: [ session directory services ].
+	cancelable cancel.
 ]

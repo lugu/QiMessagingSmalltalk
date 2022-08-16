@@ -138,7 +138,7 @@ QiChannel >> removeAllReceivers: anError [
 
 	"Remove all receivers by sending them the stop message."
 
-	receivers do: [ :each | each close: anError ].
+	receivers do: [ :each | each stop: anError ].
 	receivers removeAll.
 ]
 
@@ -170,7 +170,7 @@ QiChannel >> startPolling [
 		| msg |
 		[
 		msg := self receiveMessage.
-		receiversLock critical: [ 
+		receiversLock critical: [
 			receivers do: [ :receiver | receiver receive: msg from: self ] ] ]
 			on: Error
 			do: [ :anError |

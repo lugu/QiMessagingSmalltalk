@@ -25,7 +25,6 @@ QiResponseReceiver >> action [
 
 { #category : #accessing }
 QiResponseReceiver >> action: anObject [
-
 	action := anObject
 ]
 

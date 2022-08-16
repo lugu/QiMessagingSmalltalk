@@ -77,6 +77,12 @@ QiProxyObject >> callWithMessage: aQiMessage [
 ]
 
 { #category : #'reflective operations' }
+QiProxyObject >> channel [
+	"TODO: For debug, remove me."
+	^ channel
+]
+
+{ #category : #'reflective operations' }
 QiProxyObject >> doesNotUnderstand: aMessage [
 	"TODO: rewrite me to compile the method"
 	| messageName metaMethod payload actionId qiMessage response receiver |
@@ -138,11 +144,16 @@ QiProxyObject >> newCallMessageForAction: aNumber payload: aByteArray [
 { #category : #'reflective operations' }
 QiProxyObject >> prepareResponseTo: aQiMessage [
 
-	| metaMethod |
-	metaMethod := metaObject methods at: aQiMessage action.
-	((aQiMessage type = QiMessage typeReply) or:
-		 [aQiMessage type = QiMessage typeEvent]) ifTrue: [ 
-		^ metaMethod deserializeResponse: aQiMessage payload ].
+	aQiMessage type = QiMessage typeReply ifTrue: [
+		| metaMethod |
+		metaMethod := metaObject methods at: aQiMessage action.
+		^ metaMethod deserializeResponse: aQiMessage payload
+	].
+	aQiMessage type = QiMessage typeEvent ifTrue: [ 
+		| metaSignal |
+		metaSignal := metaObject signals at: aQiMessage action.
+		^ metaSignal deserializeResponse: aQiMessage payload
+	].
 	aQiMessage type = QiMessage typeError ifTrue: [ 
 		| stream value |
 		stream := ReadStream on: aQiMessage payload.
@@ -163,8 +174,9 @@ QiProxyObject >> registerEvent: objectNumber with: signalNumber with: aNumber [
 QiProxyObject >> registerToSignal: aString with: aBlockWithOneArgument [
 	"Register the event named aString."
 	"Execute aBlock each time the signal is updated"
-	| handler signalId receiver registerEventActionId qiMessageCall qiMessageReply messageId 	continue |
-	signalId := metaObject findMetaSignal: aString orElse: [ ^ Error new signal: 'Signal not found: ', aString ].
+	| handler metaSignal signalId receiver registerEventActionId qiMessageCall qiMessageReply messageId 	continue |
+	metaSignal := metaObject findMetaSignal: aString orElse: [ ^ Error new signal: 'Signal not found: ', aString ].
+	signalId := metaSignal uid.
 	handler := (1 to: SmallInteger maxVal) atRandom.
 	
 	"Here we would like to simply call:"
@@ -173,32 +185,38 @@ QiProxyObject >> registerToSignal: aString with: aBlockWithOneArgument [
 	"And the abstraction level at which registerEvent: lives does not provide acces to the message id."
 	"There we have to manually handle this call in a similar fashion as callMethodId:withArguments:"
 	registerEventActionId := 0.
-	qiMessageCall := self callMessageforMethodId: registerEventActionId withArguments: { objectId. signalId uid. handler }.
+	qiMessageCall := self callMessageforMethodId: registerEventActionId withArguments: { objectId. signalId. handler }.
 	messageId := qiMessageCall id. "We have the messageId, we will be able to receive updates now."
 	qiMessageReply := self callWithMessage: qiMessageCall.
 	handler := self prepareResponseTo: qiMessageReply.
-	
+
+
 	receiver := QiResponseReceiver new
 		service: serviceId;
 		object: objectId;
 		action: signalId;
 		id:  messageId.
 	channel addReceiver: receiver.
-	
 	"Process messages in the background until we receive an error (which can be a normal ending)."
 	continue := true.
-	[ continue ] whileTrue: [
+	[ [ continue ] whileTrue: [
 		[
 			| qiMessageEvent aQiValue |
 			qiMessageEvent := receiver receiveMessage.
-			aQiValue := self prepareResponseTo: qiMessageEvent.
+			[
+				aQiValue := self prepareResponseTo: qiMessageEvent.
+			] on: Error do:  [ :anError | 
+				self halt.
+			].
 			aBlockWithOneArgument value: aQiValue.
-		] onErrorDo: [ continue := false ]
-	 ] fork.
-	
-	 ^ QiCancelable new onCancel: [
+		] on: Error do: [ :anError |
+		continue := false.
+		]
+	] ] fork.
+		
+	^ QiCancelable new onCancel: [
 		[ [ self unregisterEvent: objectId with: signalId with: handler ]
-		ensure: [ channel removeReceiver: receiver. receiver stop: Error new ] ] ]
+		ensure: [ channel removeReceiver: receiver. receiver stop: QiErrorStop new ] ] ]
 ]
 
 { #category : #accessing }

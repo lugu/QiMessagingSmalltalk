@@ -53,6 +53,13 @@ QiSignatureParserTest >> testParseDictionarySignatures [
 ]
 
 { #category : #tests }
+QiSignatureParserTest >> testParseEventTraceSignature [
+	| serializer |
+	serializer := QiSignatureParser new parse: '((IiIm(ll)<timeval,tv_sec,tv_usec>llII)<EventTrace,id,kind,slotId,arguments,timestamp,userUsTime,systemUsTime,callerContext,calleeContext>)'.
+	self assert: (serializer isKindOf: QiSerializer)
+]
+
+{ #category : #tests }
 QiSignatureParserTest >> testParseSructSignatures [
 	#(
 		'()<aName>'
